@@ -648,10 +648,16 @@ em,
   position: relative;
 }
 .internship-card li:before {
+  background: var(--lime-dark);
+  border: 0;
+  border-radius: 50%;
   color: var(--lime-dark);
-  content: "↗";
+  content: "";
+  height: 7px;
   left: 0;
   position: absolute;
+  top: 0.55em;
+  width: 7px;
 }
 .project-container {
   display: grid;
@@ -1034,5 +1040,42 @@ footer {
   }
   .visual-note {
     right: -20px;
+  }
+}
+
+@media (max-width: 760px) {
+  .internship-card {
+    align-items: start;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    row-gap: 18px !important;
+  }
+
+  .internship-card .experience-heading {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .internship-card > ul {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .internship-card li {
+    align-items: flex-start;
+    display: flex;
+    gap: 1px;
+    padding-left: 0;
+  }
+
+  .internship-card li::before {
+    flex: 0 0 8px;
+    height: 8px;
+    margin-top: 0.35em;
+    position: static;
+    width: 8px;
   }
 }
