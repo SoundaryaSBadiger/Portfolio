@@ -7,10 +7,10 @@
 // ============================================
 
 const texts = [
-    "Software Tester",
-    "Java Full Stack Developer",
-    "Automation Tester",
-    "Frontend Developer"
+  "Software Tester",
+  "Java Full Stack Developer",
+  "Automation Tester",
+  "Frontend Developer",
 ];
 
 let textIndex = 0;
@@ -20,43 +20,36 @@ let isDeleting = false;
 const typingElement = document.getElementById("typing");
 
 function typeEffect() {
+  if (!typingElement) return;
 
-    if (!typingElement) return;
+  const current = texts[textIndex];
 
-    const current = texts[textIndex];
+  if (!isDeleting) {
+    typingElement.textContent = current.substring(0, charIndex++);
+  } else {
+    typingElement.textContent = current.substring(0, charIndex--);
+  }
 
-    if (!isDeleting) {
+  let speed = 120;
 
-        typingElement.textContent = current.substring(0, charIndex++);
-    } else {
+  if (!isDeleting && charIndex === current.length + 1) {
+    speed = 1800;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    textIndex++;
 
-        typingElement.textContent = current.substring(0, charIndex--);
+    if (textIndex >= texts.length) {
+      textIndex = 0;
     }
 
-    let speed = 120;
+    speed = 400;
+  }
 
-    if (!isDeleting && charIndex === current.length + 1) {
-
-        speed = 1800;
-        isDeleting = true;
-
-    } else if (isDeleting && charIndex === 0) {
-
-        isDeleting = false;
-        textIndex++;
-
-        if (textIndex >= texts.length) {
-            textIndex = 0;
-        }
-
-        speed = 400;
-    }
-
-    setTimeout(typeEffect, speed);
+  setTimeout(typeEffect, speed);
 }
 
 typeEffect();
-
 
 // ============================================
 // Mobile Menu
@@ -66,30 +59,25 @@ const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".nav-links");
 
 if (menuBtn) {
-
-    menuBtn.addEventListener("click", () => {
-
-        navLinks.classList.toggle("active");
-
-    });
-
+  menuBtn.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
+    menuBtn.setAttribute(
+      "aria-expanded",
+      navLinks.classList.contains("active"),
+    );
+  });
 }
-
 
 // ============================================
 // Close Mobile Menu
 // ============================================
 
-document.querySelectorAll(".nav-links a").forEach(link => {
-
-    link.addEventListener("click", () => {
-
-        navLinks.classList.remove("active");
-
-    });
-
+document.querySelectorAll(".nav-links a").forEach((link) => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+  });
 });
-
 
 // ============================================
 // Dark Mode
@@ -98,84 +86,59 @@ document.querySelectorAll(".nav-links a").forEach(link => {
 const themeToggle = document.getElementById("theme-toggle");
 
 if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
 
-    themeToggle.addEventListener("click", () => {
+    const icon = themeToggle.querySelector("i");
 
-        document.body.classList.toggle("dark");
+    if (document.body.classList.contains("dark")) {
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
 
-        const icon = themeToggle.querySelector("i");
+      localStorage.setItem("theme", "dark");
+    } else {
+      icon.classList.remove("fa-sun");
+      icon.classList.add("fa-moon");
 
-        if (document.body.classList.contains("dark")) {
-
-            icon.classList.remove("fa-moon");
-            icon.classList.add("fa-sun");
-
-            localStorage.setItem("theme", "dark");
-
-        } else {
-
-            icon.classList.remove("fa-sun");
-            icon.classList.add("fa-moon");
-
-            localStorage.setItem("theme", "light");
-
-        }
-
-    });
-
+      localStorage.setItem("theme", "light");
+    }
+  });
 }
-
 
 // ============================================
 // Remember Theme
 // ============================================
 
 window.addEventListener("load", () => {
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
 
-    if (localStorage.getItem("theme") === "dark") {
+    const icon = document.querySelector("#theme-toggle i");
 
-        document.body.classList.add("dark");
-
-        const icon = document.querySelector("#theme-toggle i");
-
-        if (icon) {
-
-            icon.classList.remove("fa-moon");
-            icon.classList.add("fa-sun");
-
-        }
-
+    if (icon) {
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
     }
-
+  }
 });
-
 
 // ============================================
 // Smooth Scroll
 // ============================================
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
 
-    anchor.addEventListener("click", function (e) {
+    const target = document.querySelector(this.getAttribute("href"));
 
-        e.preventDefault();
-
-        const target = document.querySelector(this.getAttribute("href"));
-
-        if (target) {
-
-            target.scrollIntoView({
-
-                behavior: "smooth"
-
-            });
-
-        }
-
-    });
-
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  });
 });
-
 
 // ============================================
 // Sticky Navbar
@@ -184,21 +147,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const navbar = document.querySelector(".navbar");
 
 window.addEventListener("scroll", () => {
+  if (!navbar) return;
 
-    if (!navbar) return;
-
-    if (window.scrollY > 50) {
-
-        navbar.style.boxShadow = "0 10px 25px rgba(0,0,0,.15)";
-
-    } else {
-
-        navbar.style.boxShadow = "0 2px 10px rgba(0,0,0,.08)";
-
-    }
-
+  if (window.scrollY > 50) {
+    navbar.style.boxShadow = "0 10px 25px rgba(0,0,0,.15)";
+  } else {
+    navbar.style.boxShadow = "0 2px 10px rgba(0,0,0,.08)";
+  }
 });
-
 
 // ============================================
 // Reveal Animation
@@ -207,27 +163,20 @@ window.addEventListener("scroll", () => {
 const sections = document.querySelectorAll("section");
 
 function revealSections() {
+  const trigger = window.innerHeight - 120;
 
-    const trigger = window.innerHeight - 120;
+  sections.forEach((section) => {
+    const top = section.getBoundingClientRect().top;
 
-    sections.forEach(section => {
-
-        const top = section.getBoundingClientRect().top;
-
-        if (top < trigger) {
-
-            section.classList.add("active");
-
-        }
-
-    });
-
+    if (top < trigger) {
+      section.classList.add("active");
+    }
+  });
 }
 
 window.addEventListener("scroll", revealSections);
 
 revealSections();
-
 
 // ============================================
 // Active Navigation
@@ -236,39 +185,24 @@ revealSections();
 const navItems = document.querySelectorAll(".nav-links a");
 
 window.addEventListener("scroll", () => {
+  let current = "";
 
-    let current = "";
+  sections.forEach((section) => {
+    const sectionTop = section.offsetTop - 130;
+    const sectionHeight = section.offsetHeight;
 
-    sections.forEach(section => {
+    if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+      current = section.getAttribute("id");
+    }
+  });
 
-        const sectionTop = section.offsetTop - 130;
-        const sectionHeight = section.offsetHeight;
+  navItems.forEach((link) => {
+    link.classList.remove("active");
 
-        if (
-
-            pageYOffset >= sectionTop &&
-            pageYOffset < sectionTop + sectionHeight
-
-        ) {
-
-            current = section.getAttribute("id");
-
-        }
-
-    });
-
-    navItems.forEach(link => {
-
-        link.classList.remove("active");
-
-        if (link.getAttribute("href") === "#" + current) {
-
-            link.classList.add("active");
-
-        }
-
-    });
-
+    if (link.getAttribute("href") === "#" + current) {
+      link.classList.add("active");
+    }
+  });
 });
 // ============================================
 // Scroll To Top Button
@@ -297,39 +231,27 @@ topBtn.style.zIndex = "999";
 topBtn.style.boxShadow = "0 10px 20px rgba(0,0,0,.2)";
 
 window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 300) {
-
-        topBtn.style.display = "block";
-
-    } else {
-
-        topBtn.style.display = "none";
-
-    }
-
+  if (window.scrollY > 300) {
+    topBtn.style.display = "block";
+  } else {
+    topBtn.style.display = "none";
+  }
 });
 
 topBtn.addEventListener("click", () => {
-
-    window.scrollTo({
-
-        top: 0,
-        behavior: "smooth"
-
-    });
-
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 });
-
 
 // ============================================
 // EmailJS Initialization
 // ============================================
 
 emailjs.init({
-    publicKey: "VkIdKm7g9vpskHzve"
+  publicKey: "VkIdKm7g9vpskHzve",
 });
-
 
 // ============================================
 // Contact Form
@@ -338,62 +260,43 @@ emailjs.init({
 const contactForm = document.getElementById("contact-form");
 
 if (contactForm) {
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-    contactForm.addEventListener("submit", function (e) {
+    const submitBtn = this.querySelector("button");
 
-        e.preventDefault();
+    submitBtn.innerHTML = "Sending...";
+    submitBtn.disabled = true;
 
-        const submitBtn = this.querySelector("button");
+    emailjs
+      .sendForm("service_k6gpnip", "template_0f4wpkp", this)
 
-        submitBtn.innerHTML = "Sending...";
-        submitBtn.disabled = true;
+      .then(() => {
+        alert("✅ Message sent successfully!");
 
-        emailjs.sendForm(
+        contactForm.reset();
+      })
 
-            "service_k6gpnip",
-            "template_0f4wpkp",
-            this
+      .catch((error) => {
+        console.error(error);
 
-        )
+        alert("❌ Failed to send message. Please try again.");
+      })
 
-        .then(() => {
-
-            alert("✅ Message sent successfully!");
-
-            contactForm.reset();
-
-        })
-
-        .catch((error) => {
-
-            console.error(error);
-
-            alert("❌ Failed to send message. Please try again.");
-
-        })
-
-        .finally(() => {
-
-            submitBtn.innerHTML = "Send Message";
-            submitBtn.disabled = false;
-
-        });
-
-    });
-
+      .finally(() => {
+        submitBtn.innerHTML = "Send Message";
+        submitBtn.disabled = false;
+      });
+  });
 }
-
 
 // ============================================
 // Page Loader
 // ============================================
 
 window.addEventListener("load", () => {
-
-    document.body.classList.add("loaded");
-
+  document.body.classList.add("loaded");
 });
-
 
 // ============================================
 // Console Message
