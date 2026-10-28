@@ -1252,6 +1252,35 @@ footer {
     transform: none;
     filter: none;
   }
+  .project-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+/* Smooth transition for every project */
+.project-container .project-card {
+  transition:
+    filter 0.5s ease,
+    transform 0.5s ease,
+    opacity 0.5s ease;
+}
+
+/* Blur other projects on hover */
+.project-container:hover .project-card {
+  filter: blur(4px);
+  opacity: 0.45;
+  transform: scale(0.97);
+}
+
+/* Keep hovered project clear */
+.project-container .project-card:hover {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1.03);
+  z-index: 2;
+  position: relative;
+}
 }
 
 }
