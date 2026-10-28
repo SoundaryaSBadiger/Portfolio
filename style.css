@@ -1104,4 +1104,130 @@ footer {
     transition: none;
   }
 }
+
+/* ===================================
+   PROJECTS: TWO UP, TWO DOWN
+=================================== */
+
+.project-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+  align-items: stretch;
+  perspective: 1000px;
+}
+
+/* Individual project card */
+.project-card {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease,
+    opacity 0.4s ease,
+    box-shadow 0.4s ease;
+
+  will-change: transform, filter;
+}
+
+/* Image styling */
+.project-image {
+  width: 100%;
+  overflow: hidden;
+}
+
+.project-image img {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+
+  transition: transform 0.6s ease;
+}
+
+/* Zoom the image when its card is hovered */
+.project-card:hover .project-image img {
+  transform: scale(1.06);
+}
+
+/* Keep content aligned consistently */
+.project-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-content > a {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* Highlight the selected project */
+.project-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  filter: blur(0);
+  opacity: 1;
+  z-index: 2;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* Blur and fade the other three projects */
+.project-container:hover .project-card:not(:hover) {
+  filter: blur(3px);
+  opacity: 0.55;
+  transform: scale(0.98);
+}
+
+/* Smooth return when the mouse leaves */
+.project-container .project-card {
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease,
+    opacity 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* Tablet and mobile layout */
+@media (max-width: 768px) {
+  .project-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .project-image img {
+    height: 220px;
+  }
+
+  /* Avoid blur effects on touch devices */
+  .project-container:hover .project-card:not(:hover) {
+    filter: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .project-card,
+  .project-image img {
+    transition: none;
+  }
+
+  .project-card:hover,
+  .project-container:hover .project-card:not(:hover) {
+    transform: none;
+    filter: none;
+  }
+}
+
 }

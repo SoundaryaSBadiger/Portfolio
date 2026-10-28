@@ -322,6 +322,36 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const projectCards = document.querySelectorAll(".project-card");
+
+  if (!("IntersectionObserver" in window)) {
+    projectCards.forEach((card) => {
+      card.classList.add("is-visible");
+    });
+    return;
+  }
+
+  const projectObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.12
+    }
+  );
+
+  projectCards.forEach((card, index) => {
+    card.style.transitionDelay = `${(index % 2) * 100}ms`;
+    projectObserver.observe(card);
+  });
+});
+
   const observer = new IntersectionObserver(
     (entries, observerInstance) => {
       entries.forEach((entry) => {
