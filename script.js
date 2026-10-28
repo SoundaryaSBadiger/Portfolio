@@ -1,10 +1,11 @@
-// ============================================
-// Portfolio JavaScript
-// ============================================
 
-// ============================================
-// Typing Animation
-// ============================================
+ // ============================================
+ // Portfolio JavaScript
+ // ============================================
+
+ // ============================================
+ // Typing Animation
+ // ============================================
 
 const texts = [
   "Software Tester",
@@ -58,7 +59,7 @@ typeEffect();
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".nav-links");
 
-if (menuBtn) {
+if (menuBtn && navLinks) {
   menuBtn.addEventListener("click", () => {
     navLinks.classList.toggle("active");
     menuBtn.setAttribute(
@@ -74,7 +75,7 @@ if (menuBtn) {
 
 document.querySelectorAll(".nav-links a").forEach((link) => {
   link.addEventListener("click", () => {
-    navLinks.classList.remove("active");
+    if (navLinks) navLinks.classList.remove("active");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
   });
 });
@@ -91,16 +92,16 @@ if (themeToggle) {
 
     const icon = themeToggle.querySelector("i");
 
-    if (document.body.classList.contains("dark")) {
-      icon.classList.remove("fa-moon");
-      icon.classList.add("fa-sun");
-
-      localStorage.setItem("theme", "dark");
-    } else {
-      icon.classList.remove("fa-sun");
-      icon.classList.add("fa-moon");
-
-      localStorage.setItem("theme", "light");
+    if (icon) {
+      if (document.body.classList.contains("dark")) {
+        icon.classList.remove("fa-moon");
+        icon.classList.add("fa-sun");
+        localStorage.setItem("theme", "dark");
+      } else {
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
+        localStorage.setItem("theme", "light");
+      }
     }
   });
 }
@@ -128,11 +129,14 @@ window.addEventListener("load", () => {
 
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
-    e.preventDefault();
+    const href = this.getAttribute("href");
 
-    const target = document.querySelector(this.getAttribute("href"));
+    if (!href || href === "#") return;
+
+    const target = document.querySelector(href);
 
     if (target) {
+      e.preventDefault();
       target.scrollIntoView({
         behavior: "smooth",
       });
@@ -175,7 +179,6 @@ function revealSections() {
 }
 
 window.addEventListener("scroll", revealSections);
-
 revealSections();
 
 // ============================================
@@ -191,7 +194,10 @@ window.addEventListener("scroll", () => {
     const sectionTop = section.offsetTop - 130;
     const sectionHeight = section.offsetHeight;
 
-    if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+    if (
+      pageYOffset >= sectionTop &&
+      pageYOffset < sectionTop + sectionHeight
+    ) {
       current = section.getAttribute("id");
     }
   });
@@ -204,6 +210,7 @@ window.addEventListener("scroll", () => {
     }
   });
 });
+
 // ============================================
 // Scroll To Top Button
 // ============================================
@@ -212,6 +219,7 @@ const topBtn = document.createElement("button");
 
 topBtn.id = "topBtn";
 topBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+topBtn.setAttribute("aria-label", "Scroll to top");
 
 document.body.appendChild(topBtn);
 
@@ -231,11 +239,7 @@ topBtn.style.zIndex = "999";
 topBtn.style.boxShadow = "0 10px 20px rgba(0,0,0,.2)";
 
 window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) {
-    topBtn.style.display = "block";
-  } else {
-    topBtn.style.display = "none";
-  }
+  topBtn.style.display = window.scrollY > 300 ? "block" : "none";
 });
 
 topBtn.addEventListener("click", () => {
@@ -265,24 +269,21 @@ if (contactForm) {
 
     const submitBtn = this.querySelector("button");
 
+    if (!submitBtn) return;
+
     submitBtn.innerHTML = "Sending...";
     submitBtn.disabled = true;
 
     emailjs
       .sendForm("service_k6gpnip", "template_0f4wpkp", this)
-
       .then(() => {
         alert("✅ Message sent successfully!");
-
         contactForm.reset();
       })
-
       .catch((error) => {
         console.error(error);
-
         alert("❌ Failed to send message. Please try again.");
       })
-
       .finally(() => {
         submitBtn.innerHTML = "Send Message";
         submitBtn.disabled = false;
@@ -306,3 +307,36 @@ console.log("====================================");
 console.log("Portfolio Loaded Successfully");
 console.log("Developed by Soundarya S Badiger");
 console.log("====================================");
+
+// ============================================
+// Project Cards Reveal Animation
+// ============================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const projectCards = document.querySelectorAll(".project-card");
+
+  if (!("IntersectionObserver" in window)) {
+    projectCards.forEach((card) => {
+      card.classList.add("is-visible");
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries, observerInstance) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observerInstance.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.12,
+    },
+  );
+
+  projectCards.forEach((card) => {
+    observer.observe(card);
+  });
+});
