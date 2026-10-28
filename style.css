@@ -1222,7 +1222,31 @@ footer {
   .project-image img {
     transition: none;
   }
+/* Smooth hover animation */
+.project-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
 
+.project-card {
+  transition: filter 0.4s ease, transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Blur all projects when hovering over the container */
+.project-container:hover .project-card {
+  filter: blur(4px);
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+/* Keep only the hovered project clear */
+.project-container .project-card:hover {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1.03);
+  z-index: 2;
+}
   .project-card:hover,
   .project-container:hover .project-card:not(:hover) {
     transform: none;
